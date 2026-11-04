@@ -52,7 +52,55 @@
             }
           ]
         }</script><link rel="alternate" type="application/rss+xml" title="NextXus Federation · Satellite Ping Feed (RSS)" href="https://nextxus.online/api/satellite/feed.rss"/><link rel="alternate" type="application/atom+xml" title="NextXus Federation · Satellite Ping Feed (Atom)" href="https://nextxus.online/api/satellite/feed.atom"/><link rel="alternate" type="application/feed+json" title="NextXus Federation · Satellite Ping Feed (JSON)" href="https://nextxus.online/api/satellite/feed.json"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&family=Playfair+Display:wght@600;700&display=swap&v=0730.01" rel="stylesheet"/><script>window.addEventListener("error",function(e){e.error instanceof DOMException&&"DataCloneError"===e.error.name&&e.message&&e.message.includes("PerformanceServerTiming")&&(e.stopImmediatePropagation(),e.preventDefault())},!0)</script><script src="https://assets.emergent.sh/scripts/emergent-main.js?v=0730.01"></script><meta name="app-version" content="core-0730.01"><script defer="defer" src="/static/js/main.5646a850.js"></script><link href="/static/css/main.e0d91d9a.css" rel="stylesheet">    <meta name="google-signin-client_id" content="134917241648-9goc8mcat23m1qkts62ujnq723a81n2v.apps.googleusercontent.com" />
-</head><body spellcheck="false"><script type="application/ld+json">{
+</head><body>
+<style>
+.ai-greeting{display:flex;gap:16px;align-items:center;background:#101412;border:2px solid #c9a84c;border-radius:16px;padding:16px;margin:16px auto;max-width:900px;position:relative;z-index:5}
+.ai-greeting h2{margin:0 0 6px;color:#c9a84c}
+.ai-greeting p{margin:0;color:#a8b3ad}
+.chat-panel{position:fixed;bottom:70px;right:20px;width:320px;max-width:90vw;background:#0a0f0b;border:2px solid #c9a84c;border-radius:12px;display:none;flex-direction:column;z-index:40;max-height:380px}
+.chat-panel.open{display:flex}
+.voice-bar{position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,.96);border-top:2px solid #00ff88;z-index:30;padding:8px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-family:system-ui,sans-serif}
+.voice-bar button{background:#00ff88;color:#04140c;border:none;border-radius:8px;padding:6px 10px;font-size:14px;font-weight:700;cursor:pointer}
+.voice-bar button.alt{background:transparent;color:#00ff88;border:1px solid #00ff88}
+body{padding-bottom:90px !important}
+</style>
+<div class="ai-greeting">
+<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#00ff88,#c9a84c);display:flex;align-items:center;justify-content:center;font-size:1.8rem;font-weight:800">TG</div>
+<div>
+<h2>Truth Gate Guide</h2>
+<p>Truth verification system. Checks claims before acceptance. Free and sovereign. <button onclick="document.getElementById('chatPanel').classList.add('open')" style="background:#00ff88;border:none;padding:6px 12px;border-radius:6px;font-weight:700;cursor:pointer">Open Chat</button></p>
+</div>
+</div>
+<div class="chat-panel" id="chatPanel">
+<div style="background:#c9a84c;color:#000;padding:8px;font-weight:800">Truth Gate Guide <button onclick="this.parentElement.parentElement.classList.remove('open')" style="float:right;background:none;border:none">✕</button></div>
+<div id="chatMessages" style="flex:1;overflow-y:auto;padding:8px;font-size:14px"><div><strong>Guide:</strong> The Truth Gate checks claims. What do you want verified?</div></div>
+<div style="display:flex;border-top:1px solid #1f3a24"><input id="chatInput" style="flex:1;background:#000;color:#fff;border:none;padding:8px" placeholder="Ask about a claim or the Gate..."><button id="sendChat" style="background:#00ff88;border:none;padding:8px 12px">Send</button></div>
+</div>
+<div class="voice-bar">
+<span id="voiceStatus">Voice off</span>
+<button id="btnEnable">Enable Voice</button>
+<button class="alt" id="btnThisPage" disabled>What’s on this page?</button>
+<button class="alt" id="btnHelp" disabled>Help</button>
+</div>
+<script>
+const synth=window.speechSynthesis;let voiceEnabled=false;
+const statusEl=document.getElementById('voiceStatus');
+function speak(t){if(!voiceEnabled||!synth)return;synth.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=0.95;synth.speak(u);statusEl.textContent='Speaking…';u.onend=()=>statusEl.textContent='Voice ready';}
+document.getElementById('btnEnable').onclick=()=>{voiceEnabled=!voiceEnabled;statusEl.textContent=voiceEnabled?'Voice ready':'Voice off';document.querySelectorAll('.voice-bar button.alt').forEach(b=>b.disabled=!voiceEnabled);if(voiceEnabled)speak('Voice enabled. This is the Truth Gate.');};
+document.getElementById('btnThisPage').onclick=()=>speak('The Truth Gate is a truth verification and knowledge system. It checks a claim before it is accepted. Truth before comfort.');
+document.getElementById('btnHelp').onclick=()=>speak('Ask in the chat about claims or how the Gate works. Free. Own your code.');
+const msgs=document.getElementById('chatMessages');
+const inp=document.getElementById('chatInput');
+function add(w,t){const d=document.createElement('div');d.innerHTML='<strong>'+w+':</strong> '+t;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
+function reply(q){q=q.toLowerCase();
+if(q.includes('truth')||q.includes('claim')||q.includes('gate'))return 'Truth Gate checks a claim before it is accepted. Truth before comfort. Free and sovereign.';
+if(q.includes('own')||q.includes('free'))return 'Free. Own your code. The Gate helps you verify before you accept.';
+return 'The Truth Gate verifies claims. Ask about a specific claim or how it works.';
+}
+document.getElementById('sendChat').onclick=()=>{const t=inp.value.trim();if(!t)return;add('You',t);setTimeout(()=>add('Guide',reply(t)),300);inp.value='';if(voiceEnabled)speak(reply(t));};
+inp.onkeypress=e=>{if(e.key==='Enter')document.getElementById('sendChat').click();};
+</script>
+ spellcheck="false"><script type="application/ld+json">{
           "@context": "https://schema.org",
           "@type": "RadioStation",
           "name": "NextXus Radio",
